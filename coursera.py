@@ -7,17 +7,20 @@ import bs4
 def get_xml_from_sitemap():
     response = requests.get('https://www.coursera.org/sitemap~www~courses.xml')
     xml_data = response.content
-    print(xml_data)
+    print(str(xml_data.decode('utf-8')))
     return xml_data
 
 
 def get_courses_list(xml):
     tree = etree.XML(xml)
-    nodes = tree.xpath('/urlset/url/loc')  # Открываем раздел
-    for node in nodes:  # Перебираем элементы
-        print(node.tag, node.keys(), node.values())
-        print('name =', node.get('name'))  # Выводим параметр name
-        print('text =', [node.text])  # Выводим текст элемента
+    # child = tree.getchildren()
+    # for c in tree:
+    #     print(c.text)
+    # nodes = child.xpath('/url/loc')  # Открываем раздел
+    # for node in nodes:  # Перебираем элементы
+    #     print(node.tag, node.keys(), node.values())
+    #     print('name =', node.get('name'))  # Выводим параметр name
+    #     print('text =', [node.text])  # Выводим текст элемента
 
 
 def get_course_info(course_slug):
