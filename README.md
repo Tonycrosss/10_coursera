@@ -1,6 +1,16 @@
 # Coursera Dump
 
-[TODO. There will be project description]
+This module is collecting data of courses on coursera and saves it to courses.xlsx  
+At your module directory
+
+# Usage example
+
+```bash
+$ python3 coursera.py
+Collecting data....
+Complete! Check courses.xlsx!
+
+```
 
 # Project Goals
 
