@@ -13,8 +13,8 @@ def get_xml_from_sitemap():
 def get_courses_list(xml, quantity):
     tree = etree.fromstring(xml)
     courses_list = []
-    for item in tree:
-        courses_list.append(item[0].text)
+    for stick in tree:
+        courses_list.append(stick[0].text)
     return courses_list[:quantity]
 
 
