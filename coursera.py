@@ -61,8 +61,10 @@ def output_courses_info_to_xlsx(courses_info):
 
 
 if __name__ == '__main__':
+    print('Collecting data....')
     courses_xml = get_xml_from_sitemap()
     courses_quantity = 10
     courses_list = get_courses_list(courses_xml, courses_quantity)
     courses_info = get_course_info(courses_list)
     output_courses_info_to_xlsx(courses_info)
+    print('Complete! Check courses.xlsx!')
