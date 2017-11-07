@@ -40,10 +40,10 @@ def get_course_info(courses_url_list):
     return courses_info
 
 
-def output_courses_info_to_xlsx(courses_info):
+def save_courses_info_to_xlsx(courses_info):
     wb = Workbook()
     ws1 = wb.active
-    ws1.title = 'lalala'
+    ws1.title = 'Coursera'
     ws1['A1'] = 'Название курса'
     ws1['B1'] = 'Язык курса'
     ws1['C1'] = 'Дата начала курса'
@@ -66,5 +66,5 @@ if __name__ == '__main__':
     courses_quantity = 10
     courses_list = get_courses_list(courses_xml, courses_quantity)
     courses_info = get_course_info(courses_list)
-    output_courses_info_to_xlsx(courses_info)
+    save_courses_info_to_xlsx(courses_info)
     print('Complete! Check courses.xlsx!')
