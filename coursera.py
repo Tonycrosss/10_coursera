@@ -18,26 +18,23 @@ def get_courses_list(xml, quantity):
     return courses_list[:quantity]
 
 
-def get_course_info(courses_url_list):
-    courses_info = []
-    for course in courses_url_list:
-        response = requests.get(course)
-        dirty_html = response.content
-        soup = BeautifulSoup(dirty_html, 'html.parser')
-        course_name = soup.find_all('h2')[0].get_text()
-        course_language = soup.find_all('div', 'rc-Language')[0].get_text()
-        course_start_date = soup.find_all('div', 'startdate')[0].get_text()
-        course_length = len(soup.find_all('div', 'week'))
-        try:
-            course_ratings = soup.find_all('div', 'ratings-text')[0].get_text()
-        except IndexError:
-            course_ratings = 'No ratings yet'
-        courses_info.append({'course_name': course_name,
-                             'course_language': course_language,
-                             'course_start_date': course_start_date,
-                             'course_length': course_length,
-                             'course_ratings': course_ratings})
-    return courses_info
+def get_course_info(course_url):
+    response = requests.get(course_url)
+    dirty_html = response.content
+    soup = BeautifulSoup(dirty_html, 'html.parser')
+    course_name = soup.find_all('h2')[0].get_text()
+    course_language = soup.find_all('div', 'rc-Language')[0].get_text()
+    course_start_date = soup.find_all('div', 'startdate')[0].get_text()
+    course_length = len(soup.find_all('div', 'week'))
+    try:
+        course_ratings = soup.find_all('div', 'ratings-text')[0].get_text()
+    except IndexError:
+        course_ratings = None
+    return {'course_name': course_name,
+            'course_language': course_language,
+            'course_start_date': course_start_date,
+            'course_length': course_length,
+            'course_ratings': course_ratings}
 
 
 def save_courses_info_to_xlsx(courses_info):
@@ -56,7 +53,10 @@ def save_courses_info_to_xlsx(courses_info):
         ws1['B{}'.format(row_num)] = course['course_language']
         ws1['C{}'.format(row_num)] = course['course_start_date']
         ws1['D{}'.format(row_num)] = course['course_length']
-        ws1['E{}'.format(row_num)] = course['course_ratings']
+        if course['course_ratings'] is None:
+            ws1['E{}'.format(row_num)] = 'No ratings yet'
+        else:
+            ws1['E{}'.format(row_num)] = course['course_ratings']
     wb.save(filename='./courses.xlsx')
 
 
@@ -65,6 +65,8 @@ if __name__ == '__main__':
     courses_xml = get_xml_from_sitemap()
     courses_quantity = 10
     courses_list = get_courses_list(courses_xml, courses_quantity)
-    courses_info = get_course_info(courses_list)
+    courses_info = []
+    for course_link in courses_list:
+        courses_info.append(get_course_info(course_link))
     save_courses_info_to_xlsx(courses_info)
     print('Complete! Check courses.xlsx!')
