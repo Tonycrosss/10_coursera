@@ -2,7 +2,7 @@ from lxml import etree
 import requests
 from openpyxl import Workbook
 from bs4 import BeautifulSoup
-
+import argparse
 
 def get_xml_from_sitemap():
     response = requests.get('https://www.coursera.org/sitemap~www~courses.xml')
@@ -37,7 +37,7 @@ def get_course_info(course_url):
             'course_ratings': course_ratings}
 
 
-def save_courses_info_to_xlsx(courses_info):
+def save_courses_info_to_xlsx(courses_info, filepath):
     wb = Workbook()
     ws1 = wb.active
     ws1.title = 'Coursera'
@@ -57,16 +57,27 @@ def save_courses_info_to_xlsx(courses_info):
             ws1['E{}'.format(row_num)] = 'No ratings yet'
         else:
             ws1['E{}'.format(row_num)] = course['course_ratings']
-    wb.save(filename='./courses.xlsx')
+    wb.save(filepath)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--filepath', type=str,
+                        help='Enter the filepath, where data will be stored',
+                        const='./courses.xlsx')
+    args = parser.parse_args()
+    return args
 
 
 if __name__ == '__main__':
     print('Collecting data....')
+    args = parse_args()
     courses_xml = get_xml_from_sitemap()
     courses_quantity = 10
     courses_list = get_courses_list(courses_xml, courses_quantity)
     courses_info = []
     for course_link in courses_list:
         courses_info.append(get_course_info(course_link))
-    save_courses_info_to_xlsx(courses_info)
+    filepath = args.filepath
+    save_courses_info_to_xlsx(courses_info, filepath)
     print('Complete! Check courses.xlsx!')
