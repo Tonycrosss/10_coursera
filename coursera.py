@@ -12,9 +12,9 @@ def get_xml_from_sitemap():
 
 def get_courses_list(xml, quantity):
     tree = etree.fromstring(xml)
-    courses_list = []
-    for stick in tree:
-        courses_list.append(stick[0].text)
+    courses_list = [stick[0].text for stick in tree]
+    # for stick in tree:
+    #     courses_list.append(stick[0].text)
     return courses_list[:quantity]
 
 
@@ -37,7 +37,7 @@ def get_course_info(course_url):
             'course_ratings': course_ratings}
 
 
-def save_courses_info_to_xlsx(courses_info, filepath):
+def save_courses_info_to_xlsx(courses_info, filepath='./courses.xlsx'):
     wb = Workbook()
     ws1 = wb.active
     ws1.title = 'Coursera'
@@ -63,8 +63,7 @@ def save_courses_info_to_xlsx(courses_info, filepath):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--filepath', type=str,
-                        help='Enter the filepath, where data will be stored',
-                        const='./courses.xlsx')
+                        help='Enter the filepath, where data will be stored')
     args = parser.parse_args()
     return args
 
@@ -75,9 +74,9 @@ if __name__ == '__main__':
     courses_xml = get_xml_from_sitemap()
     courses_quantity = 10
     courses_list = get_courses_list(courses_xml, courses_quantity)
-    courses_info = []
-    for course_link in courses_list:
-        courses_info.append(get_course_info(course_link))
+    courses_info = [get_course_info(course_link) for course_link in courses_list]
+    # for course_link in courses_list:
+    #     courses_info.append(get_course_info(course_link))
     filepath = args.filepath
     save_courses_info_to_xlsx(courses_info, filepath)
     print('Complete! Check courses.xlsx!')
