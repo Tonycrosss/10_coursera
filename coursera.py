@@ -51,7 +51,7 @@ def prepare_workbook(filepath='./courses.xlsx'):
 
 def save_courses_info_to_xlsx(prepared_workbook, courses_info, filepath='./courses.xlsx'):
     row_nums = [row_num for row_num in range(2, len(courses_info) + 2)]
-    ws1 = prepared_workbook.active()
+    ws1 = prepared_workbook.active
     for course in courses_info:
         row_num = row_nums.pop()
         ws1['A{}'.format(row_num)] = course['course_name']
