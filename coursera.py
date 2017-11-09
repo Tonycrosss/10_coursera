@@ -4,6 +4,7 @@ from openpyxl import Workbook
 from bs4 import BeautifulSoup
 import argparse
 
+
 def get_xml_from_sitemap():
     response = requests.get('https://www.coursera.org/sitemap~www~courses.xml')
     xml_data = response.content
