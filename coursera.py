@@ -81,6 +81,6 @@ if __name__ == '__main__':
     courses_list = get_courses_list(courses_xml, courses_quantity)
     courses_info = [get_course_info(course_link) for course_link in courses_list]
     filepath = args.filepath
-    prepared_workbook = prepare_workbook()
+    prepared_workbook = prepare_workbook(filepath)
     save_courses_info_to_xlsx(prepared_workbook, courses_info, filepath)
     print('Complete! Check courses.xlsx!')
