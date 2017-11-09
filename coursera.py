@@ -36,7 +36,7 @@ def get_course_info(course_url):
             'course_ratings': course_ratings}
 
 
-def save_courses_info_to_xlsx(courses_info, filepath='./courses.xlsx'):
+def prepare_workbook(filepath='./courses.xlsx'):
     wb = Workbook()
     ws1 = wb.active
     ws1.title = 'Coursera'
@@ -45,7 +45,13 @@ def save_courses_info_to_xlsx(courses_info, filepath='./courses.xlsx'):
     ws1['C1'] = 'Дата начала курса'
     ws1['D1'] = 'Длительность курса (недели)'
     ws1['E1'] = 'Средняя оценка курса'
+    wb.save(filepath)
+    return wb
+
+
+def save_courses_info_to_xlsx(prepared_workbook, courses_info, filepath='./courses.xlsx'):
     row_nums = [row_num for row_num in range(2, len(courses_info) + 2)]
+    ws1 = prepared_workbook.active()
     for course in courses_info:
         row_num = row_nums.pop()
         ws1['A{}'.format(row_num)] = course['course_name']
@@ -56,7 +62,7 @@ def save_courses_info_to_xlsx(courses_info, filepath='./courses.xlsx'):
             ws1['E{}'.format(row_num)] = 'No ratings yet'
         else:
             ws1['E{}'.format(row_num)] = course['course_ratings']
-    wb.save(filepath)
+    prepared_workbook.save(filepath)
 
 
 def parse_args():
@@ -75,5 +81,6 @@ if __name__ == '__main__':
     courses_list = get_courses_list(courses_xml, courses_quantity)
     courses_info = [get_course_info(course_link) for course_link in courses_list]
     filepath = args.filepath
-    save_courses_info_to_xlsx(courses_info, filepath)
+    prepared_workbook = prepare_workbook()
+    save_courses_info_to_xlsx(prepared_workbook, courses_info, filepath)
     print('Complete! Check courses.xlsx!')
